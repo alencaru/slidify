@@ -1,0 +1,83 @@
+---
+title       : GAS EXPENSES
+subtitle    : Based on country gas prices and car gas consumption.  
+author      : Igor Demetrius Alencar
+job         : Project for Developing data produtcs 
+framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
+highlighter : highlight.js  # {highlight.js, prettify, highlight}
+hitheme     : tomorrow      # 
+widgets     : []            # {mathjax, quiz, bootstrap, regex}
+mode        : selfcontained # {standalone, draft}
+knit        : slidify::knit2slides
+github:
+        user:alencaru
+        repo:slidify
+--- 
+
+## <p style="color:#2E8B57;">The gas expenses App</p>
+<br>
+<br>
+This app shows the fuel expenses by gas litre country prices and by gasoline consumption for a selected car.
+
+The app was build in <b style="color:#008B8B;">R</b> using shiny package.
+If you want run this app you can find it at:
+https://github.com/alencaru/Developing-data-products.git
+
+You need download all files and also have <b style="color:#008B8B;">R</b> and <b>shiny</b> package istalled.
+
+
+
+--- 
+
+## Data Base 
+
+# This app is compound by two tables:                                                              
+                                                                                         
+                                                                                          
+1. tprices: is the source of country gas prices;
+2. tcar: is the source of gas consumption by car.
+
+* tprice source: http://www.nationmaster.com/country-info/stats/Energy/Gasoline-prices;
+* tcar source: http://pbeveicular.petrobras.com.br/TabelaConsumo.aspx (in Portuguese only).
+
+---
+
+# <b style="font-size:1.2em;color:#D2691E;">How the app works</b>
+
+After set up that two tables the app run a function that takes the inpts from TextBox and the chosen of DropBox alternatives.
+
+The <b>TextBox</b> is the kilometer you want drive.                                                    
+The <b>DropBox</b> has a list with some cars.                                                          
+To generate the output the app use a custom function:
+
+```{r echo=TRUE}
+myfunction <- function(x,y) {
+        x 
+        y   
+        z <- tcar[tcar$CAR == c(y), 3]
+        within(tprice[, c(2, 3)], {expenditure <- x/z*price})
+}
+
+```
+
+- The function works with two variables.                                                         
+- The first one is the km you want drive.                                                         
+- The second one is the car name you will chosen in a dropbox list in the shiny app.
+
+---
+
+## <p style="font-size:0.7em;">Some exemple of the function output
+<p>
+```{r echo=FALSE, results='asis'}
+tprice<-read.table("tprice.csv", sep=",", header=T)
+```
+```{r echo=FALSE, results='asis'}
+library(xtable)
+
+tcar<-read.table("tcar.csv", sep=",", header=T)
+        z <- tcar[tcar$CAR == "Civic",3]
+        m<-within(tprice[,c(2,3)],{expenditure <- 50/z*price})
+     print(xtable(m), type='html')   
+```
+
+
